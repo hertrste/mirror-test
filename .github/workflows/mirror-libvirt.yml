@@ -1,0 +1,38 @@
+name: Mirror libvirt
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/mirror-libvirt.yml"
+      - ".github/scripts/mirror-libvirt.sh"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mirror-libvirt
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    name: Mirror cyberus-technology/libvirt
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout control branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+
+      - name: Mirror upstream refs
+        env:
+          UPSTREAM_URL: https://github.com/cyberus-technology/libvirt.git
+          BRANCH_PREFIX: libvirt/
+          TAG_PREFIX: libvirt/
+          PROTECTED_BRANCHES: main
+        run: ./.github/scripts/mirror-libvirt.sh
