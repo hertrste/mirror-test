@@ -11,4 +11,4 @@ The workflow keeps this repository's `main` branch as the control branch and mir
 
 Keeping mirrored branches under the `libvirt/` prefix prevents upstream content from overwriting `.github/workflows/mirror-libvirt.yml` on `main`, so the scheduled mirror job remains in place.
 
-GitHub does not allow the default Actions token to create or update workflow files from another repository. The mirror therefore strips `.github/workflows` from the mirrored branch and tag contents before pushing them.
+The workflow requires a repository secret named `MIRROR_TOKEN`. Use a token that can write repository contents and workflow files, for example a fine-grained token scoped to this repository with contents and workflows write access. This is required because the default Actions token cannot mirror upstream commits that contain `.github/workflows/*` files.
